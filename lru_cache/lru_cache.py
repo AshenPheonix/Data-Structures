@@ -23,7 +23,7 @@ class LRUCache:
     def get(self, key):
         if key in self.dict:
             self.contents.move_to_front(self.dict.get(key))
-            return self.contents.head.value
+            return self.contents.head.value[1]
         else:
             return None
         
@@ -38,20 +38,31 @@ class LRUCache:
     the newly-specified value.
     """
     def set(self, key, value):
-        if key in self.dict:
-            self.dict.get(key).value=value
-            self.contents.move_to_front(self.dict.get(key))
-        elif self.current >= self.limit:
 
-            to_remove = self.contents.tail
-            self.contents.remove_from_tail()
-            self.contents.add_to_head(value)
+        if key in self.dict:
+            self.dict.get(key).value=(key,value)
+            self.contents.move_to_front(self.dict.get(key))
+
+        else:
+            self.contents.add_to_head((key,value))
             self.dict[key]=self.contents.head
 
-            r_key = [key for key,value in self.dict.items() if value == to_remove][0]
-            self.dict.pop(r_key)
-        else:
-            self.current+=1
-            self.contents.add_to_head(value)
+            if self.current>=self.limit:
+                self.dict.pop(self.contents.remove_from_tail()[0])
+            else:
+                self.current+=1
+
+        '''
+        elif self.current >= self.limit:
+            to_remove = self.contents.tail
+            self.contents.remove_from_tail()
+            self.dict.pop(to_remove.value[0])
+
+            self.contents.add_to_head((key,value))
             self.dict[key] = self.contents.head
 
+        else:
+            self.current+=1
+            self.contents.add_to_head((key,value))
+            self.dict[key] = self.contents.head
+        '''
