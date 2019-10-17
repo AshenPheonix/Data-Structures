@@ -7,13 +7,20 @@ class Queue:
     def __init__(self):
         self.size = 0
         # Why is our DLL a good choice to store our elements?
+        # a Queue is a good choice to store our elements as it allows for fast inserts and removals without having to re-organize the entire section of memory. Also means we don't have to resize allocated space.
         # self.storage = ?
+        self.storage = DoublyLinkedList()
 
     def enqueue(self, value):
-        pass
+        self.size+=1
+        self.storage.add_to_head(value)
 
     def dequeue(self):
-        pass
+        if self.size==0:
+            return None
+        else:
+            self.size-=1
+            return self.storage.remove_from_tail()
 
     def len(self):
-        pass
+        return self.size
