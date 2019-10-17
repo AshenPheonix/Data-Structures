@@ -72,10 +72,10 @@ class BinarySearchTree:
         temp_node = node
         while temp_node:
             print(temp_node.value)
-            if temp_node.right:
-                queue.enqueue(temp_node.right)
             if temp_node.left:
                 queue.enqueue(temp_node.left)
+            if temp_node.right:
+                queue.enqueue(temp_node.right)
             temp_node=queue.dequeue()
 
     # Print the value of every node, starting with the given node,
@@ -85,10 +85,10 @@ class BinarySearchTree:
         temp_node = node
         while temp_node:
             print(temp_node.value)
-            if temp_node.right:
-                stack.push(temp_node.right)
             if temp_node.left:
                 stack.push(temp_node.left)
+            if temp_node.right:
+                stack.push(temp_node.right)
             temp_node = stack.pop()
 
     # STRETCH Goals -------------------------
@@ -105,7 +105,22 @@ class BinarySearchTree:
     # Print Post-order recursive DFT
     def post_order_dft(self, node):
         if self.left:
-            self.left.pre_order_dft(self)
+            self.left.post_order_dft(self)
         if self.right:
-            self.right.pre_order_dft(self)
+            self.right.post_order_dft(self)
         print(self.value)
+
+    def delete_target(self, back, removed):
+        if self.right:
+            self.right.delete_target(self,removed)
+        else:
+            removed.value = self.value
+            back.right = self.left
+        
+    def delete(self, value_to_remove):
+        if self.value == value_to_remove:
+            self.left.delete_target(self,self)
+        elif self.value < value_to_remove:
+            self.right.delete(value_to_remove)
+        else:
+            self.left.delete(value_to_remove)
